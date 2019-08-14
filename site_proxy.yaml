@@ -1,0 +1,5 @@
+---
+ - hosts: zabbix-proxy
+   gather_facts: False
+   roles:
+   - { role: zabbix-proxy, tags: proxy }

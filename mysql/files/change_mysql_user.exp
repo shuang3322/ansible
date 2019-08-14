@@ -1,0 +1,8 @@
+#！/usr/bin/expect                    
+set passwd [lindex $argv 0]   
+spawn /usr/bin/mysqladmin -u root -p password "Shuang@123"
+expect {
+    "*password" {exp_send  "$passwd\r"}
+}
+
+expect eof

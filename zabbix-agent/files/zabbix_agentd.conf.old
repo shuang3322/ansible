@@ -1,0 +1,4 @@
+Server={{ zabbix_server }},{{ zabbix_proxy }}
+ListenIP={{ inventory_hostname }}
+ServerActive={{ zabbix_proxy }}:10052
+Hostname={{ hostname }}

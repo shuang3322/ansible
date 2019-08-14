@@ -1,0 +1,5 @@
+---
+ - name: include mysql
+   include: install.yml
+ - name: include mysql info_db
+   include: info_db.yml

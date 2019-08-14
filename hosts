@@ -1,0 +1,8 @@
+[zabbix-server]
+10.0.0.193 ansible_ssh_host=10.77.100.9 ansible_ssh_port=193 hostname=zabbix_server
+[zabbix-proxy]
+10.0.0.194 ansible_ssh_host=10.77.100.9 ansible_ssh_port=194 hostname=zabbix_proxy
+[zabbix-agent]
+10.0.0.187 ansible_ssh_host=10.77.100.9 ansible_ssh_port=187 hostname=lnmp_n
+10.0.0.188 ansible_ssh_host=10.77.100.9 ansible_ssh_port=188 hostname=lnmp_p
+10.0.0.189 ansible_ssh_host=10.77.100.9 ansible_ssh_port=189 hostname=lnmp_m

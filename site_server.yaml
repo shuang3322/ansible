@@ -1,0 +1,5 @@
+---
+ - hosts: zabbix-server
+   gather_facts: False
+   roles:
+   - { role: zabbix-server, tags: server}

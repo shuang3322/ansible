@@ -1,0 +1,23 @@
+---
+ - name: set hostname
+   hostname: name={{ hostname }}
+ - name: disable seliunx
+   shell: sed -i 's/SELINUX=enforcing/SELINUX=disabled/g' /etc/sysconfig/selinux
+ - name: Install libselinux-python
+   raw: yum install libselinux-python -y 
+ 
+ - name: copy epel yum source
+   copy: src={{ item.src }}  dest={{ item.dest }} owner=root group=root mode=644
+   with_items:
+     - {src: epel-7.repo, dest: /etc/yum.repos.d/epel.repo }
+     - {src: RPM-GPG-KEY-EPEL-7, dest: /etc/pki/rpm-gpg/RPM-GPG-KEY-EPEL-7 }
+     - {src: zabbix-release-4.3-1.el7.noarch.rpm, dest: /root/zabbix-release-4.3-1.el7.noarch.rpm } 
+ - name: judge a file or dir is exits
+   shell: ls /etc/yum.repos.d/zabbix.repo
+   ignore_errors: True
+   register: result 
+ - name:  install zabbox.repo  
+   raw: yum install /root/zabbix-release-4.3-1.el7.noarch.rpm -y
+   when: result|failed
+ - name: copy /etc/hosts files
+   template: src=hosts.j2 dest=/etc/hosts owner=root group=root mode=644

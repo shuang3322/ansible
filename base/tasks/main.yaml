@@ -1,0 +1,20 @@
+---
+ - name: set hostname
+   hostname: name={{ hostname }}
+
+ - name: disable seliunx
+   shell: sed -i 's/SELINUX=enforcing/SELINUX=disabled/g' /etc/sysconfig/selinux
+
+
+ - name: copy epel yum source
+   copy: src={{ item.src }}  dest={{ item.dest }} owner=root group=root mode=644
+   with_items:
+     - {src: Centos-7.repo, dest: /etc/yum.repos.d/CentOS-Base.repo }
+     - {src: epel-7.repo, dest: /etc/yum.repos.d/epel.repo }
+ 
+ - name: Install libselinux-python
+   raw: yum install libselinux-python -y 
+
+ - name: copy /etc/hosts files
+   template: src=hosts.j2 dest=/etc/hosts owner=root group=root mode=644
+  

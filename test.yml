@@ -1,0 +1,10 @@
+---
+ - hosts: all
+   block:
+   - debug: msg="test"
+   - command: /bin/fales
+   - debug: "you won't"
+   rescue:
+   - debug: "you only"
+   always: 
+   - debug: "this will be always"

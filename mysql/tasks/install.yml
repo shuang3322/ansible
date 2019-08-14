@@ -1,0 +1,21 @@
+ - name: copy mysql yum source
+   copy: src={{ item.src }}  dest={{ item.dest }} owner=root group=root mode=644
+   with_items:
+   - {src: add_mysql.exp, dest: /root/add_mysql.exp }
+   - {src: change_mysql_user.exp, dest: /root/change_mysql_user.exp }
+   - {src: mysql-community-server-5.7.27-1.el7.x86_64.rpm, dest: /root/mysql-community-server-5.7.27-1.el7.x86_64.rpm }
+
+ - name: mysql.repo
+   yum: name=/root/mysql57-community-release-el7-8.noarch.rpm state=present
+
+ - name: Install expect and mysql-server
+   yum: name={{ item }} state=latest
+   with_items:
+   - expect
+   - mysql-community-server
+
+ - name: chmod -R 777 /var/lib/mysql
+   shell: chmod -R 777 /var/lib/mysql
+   
+ - name: Start mysql-server
+   service: name=mysqld state=started enabled=yes

@@ -1,0 +1,13 @@
+---
+ - name: install base
+   include_role:
+     name: base
+     tasks_from: main
+
+ - name: zabbix.repo and keys copy
+   copy: src={{ item.src }}  dest={{ item.dest }} owner=root group=root mode=644
+   with_items:
+     - {src: RPM-GPG-KEY-ZABBIX, dest: /etc/pki/rpm-gpg/RPM-GPG-KEY-ZABBIX }
+     - {src: RPM-GPG-KEY-ZABBIX-A14FE591, dest: /etc/pki/rpm-gpg/RPM-GPG-KEY-ZABBIX-A14FE591 }
+     - {src: zabbix.repo, dest: /etc/yum.repos.d/zabbix.repo } 
+  
