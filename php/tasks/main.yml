@@ -1,10 +1,3 @@
 ---
- - name: Install  PHP
-   yum: name={{ item }} state=present
-   with_items:
-     - php
-     - php-mysql
-     - libsemanage-python
-     - libselinux-python
- - name: Copy index.php.j2
-   template: src=index.php.j2 dest=/var/www/html/index.php
+ - name: include nginx
+   include: install.yml
