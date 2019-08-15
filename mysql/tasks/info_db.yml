@@ -27,7 +27,7 @@
    register: mysql_login_path
 
  - name: update mysql path file
-   shell: expect /root/add_mysql.exp {{mysql_passwd}}
+   shell: expect /root/add_mysql.exp {{mysql_passwd}} {{mysql_loginpath_user}}
    register: mysql_user_end
    when: mysql_login_path|failed
  

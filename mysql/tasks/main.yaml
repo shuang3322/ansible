@@ -3,7 +3,5 @@
    include: install.yml
  - name: include mysql info_db
    include: info_db.yml
- - name: include mysql databases
+ - name: include mysql info_database
    include: info_database.yml
-
-   

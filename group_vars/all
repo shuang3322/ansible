@@ -3,3 +3,7 @@ zabbix_server: 10.0.0.193
 zabbix_proxy: 10.0.0.194
 ansible_ssh_user: root
 mysql_passwd: Shuang@123
+database: test
+user: test
+password: Shuang@123
+mysql_loginpath_user: mysql_root

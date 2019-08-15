@@ -2,4 +2,4 @@
  - hosts: all
    gather_facts: False
    roles:
-   - { role: zabbix_base, tags: base}
+   - { role: zabbix-base, tags: zabbix-base}

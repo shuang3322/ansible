@@ -2,23 +2,29 @@
  - name: include mysql
    include_role:
      name: mysql
-     tasks_from: main
+     tasks_from: install.yml
+
+ - name: include mysql
+   include_role:
+     name: mysql
+     tasks_from: info_db.yml
+
  - name: install zabbix proxy
    yum: name={{ item }} state=latest
    with_items:
    - zabbix-proxy
    
  - name: test login in mysql 
-   shell: mysql -uroot -p{{zabbix_mysql_passwd}} -e' use zabbix_proxy; '
+   shell: mysql --login-path={{mysql_loginpath_user}} -e' use zabbix_proxy; '
    ignore_errors: True
    register: test_musql_data
 
  - name: Create Zabbix master databases
-   shell: mysql --login-path=mysql_root -e 'create database zabbix_proxy character set utf8 collate utf8_bin;'
+   shell: mysql --login-path={{mysql_loginpath_user}} -e 'create database zabbix_proxy character set utf8 collate utf8_bin;'
    when: test_musql_data|failed
 
  - name: Set Zabbix Master databases grant
-   shell: mysql --login-path=mysql_root -e "grant all privileges on zabbix_proxy.* to zabbix_proxy@localhost identified by '{{zabbix_mysql_passwd}}';"
+   shell: mysql --login-path={{mysql_loginpath_user}} -e "grant all privileges on zabbix_proxy.* to zabbix_proxy@localhost identified by '{{mysql_passwd}}';"
    when: test_musql_data|failed
 
  - name: Import zabbix initial data 

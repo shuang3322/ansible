@@ -2,4 +2,5 @@
  - hosts: zabbix-server
    gather_facts: False
    roles:
+   - { role: zabbix-base, tags: zabbix-base }
    - { role: zabbix-server, tags: server}

@@ -1,6 +1,7 @@
 #！/usr/bin/expect                    
 set passwd [lindex $argv 0]   
-spawn mysql_config_editor set --login-path=mysql_root --user=root --password
+set user [lindex $argv 1]   
+spawn mysql_config_editor set --login-path=$user --user=root --password
 expect {
     "*password" {exp_send  "$passwd\r"}
 }

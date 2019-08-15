@@ -1,0 +1,60 @@
+---
+ - name: copy mysql yum source
+   copy: src={{ item.src }}  dest={{ item.dest }} owner=root group=root mode=644
+   with_items:
+     - {src: mysql57-community-release-el7-8.noarch.rpm, dest: /root/mysql57-community-release-el7-8.noarch.rpm }
+ - name: mysql.repo
+   yum: name=/root/mysql57-community-release-el7-8.noarch.rpm state=present
+ - name: Install Mysql-Server and zabbix-server
+   yum: name={{ item }} state=latest
+   with_items:
+    - mysql-community-server
+    - zabbix-server
+    - zabbix-server-mysql 
+    - zabbix-web-mysql
+    - expect
+ - name: chmod -R 777 /var/lib/mysql
+   shell: chmod -R 777 /var/lib/mysql
+
+ - name: grep 'temporary password' /var/log/mysqld.log |awk -F ' ' '{print $NF}'
+   shell : grep 'temporary password' /var/log/mysqld.log |awk -F ' ' '{print $NF}'
+   register: mysql_pass
+
+ - name: Start mysql-server
+   service: name=mysqld state=started enabled=yes
+
+ - name: test mysql
+   shell : mysql -root -p123456
+   ignore_errors: ture
+   register: result_mysql
+
+ - name: Set mysql admin password
+   shell: /usr/bin/mysqladmin -u root -p"{{mysql_pass['stdout']}}" password "123456789"
+   when: result_mysql|failed
+
+ - name: Create Zabbix master databases
+   shell: mysql -u root -pansible -e 'create database zabbix_master character set utf8 collate utf8_bin;'
+ 
+ - name: Set Zabbix Master databases grant
+   shell: mysql -u root -pansible -e 'grant all privileges on zabbix_master.* to zabbix@localhost identified by "master";'
+ 
+ - name: Import zabbix initial data (schema.sql)
+   shell: mysql -u zabbix -pmaster zabbix_master < schema.sql  chdir=/usr/share/doc/zabbix-server-mysql-2.4.6/create 
+ 
+ - name: Import zabbix initial data (images.sql)
+   shell: mysql -u zabbix -pmaster zabbix_master < images.sql  chdir=/usr/share/doczabbix-server-mysql-2.4.6/create 
+ 
+ - name: Import zabbix initial data (data.sql)
+   shell: mysql -u zabbix -pmaster zabbix_master < data.sql  chdir=/usr/share/doc/zabbix-server-mysql-2.4.6/create 
+ 
+ - name: change PHP timezone
+   shell: sed -e 's@;date.timezone =.*@date.timezone = Asia/Shanghai@g' /etc/php.ini
+ 
+ - name: Copy /etc/zabbix/zabbix_server.conf files
+   template: src=zabbix_server.conf dest=/etc/zabbix/zabbix_server.conf owner=root group=root mode=644
+ 
+ - name: Start Zabbix-Server and httpd 
+   service: name={{ item }} state=started enabled=yes
+   with_items:
+   - zabbix-server
+   - httpd
