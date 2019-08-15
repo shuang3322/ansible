@@ -1,20 +1,20 @@
  - name: test login in mysql 
-   shell: mysql -uroot -p{{mysql_passwd}}
+   shell: mysql -uroot -p{{zabbix_mysql_passwd}}
    ignore_errors: True
    register: login_msg
 
  - name: grep 'temporary password' /var/log/mysqld.log |awk -F ' ' '{print $NF}'
    shell : grep 'temporary password' /var/log/mysqld.log |awk -F ' ' '{print $NF}'
-   register: mysqlpass
+   register: mysql_pass
    when: login_msg|failed
 
  - name: update mysql passwd
-   shell: expect /root/change_mysql_user.exp '{{ mysqlpass['stdout'] }}'
+   shell: expect /root/change_mysql_user.exp '{{ mysql_pass['stdout'] }}'
    register: mysql_end
    when: login_msg|failed
 
  - name: show mysql_pass
-   debug: msg="{{mysqlpass}}"
+   debug: msg="{{mysql_pass}}"
    when: login_msg|failed
 
  - name: show mysql_ehd
@@ -27,7 +27,7 @@
    register: mysql_login_path
 
  - name: update mysql path file
-   shell: expect /root/add_mysql.exp {{mysql_passwd}}
+   shell: expect /root/add_mysql.exp {{zabbix_mysql_passwd}}
    register: mysql_user_end
    when: mysql_login_path|failed
  

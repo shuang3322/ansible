@@ -3,16 +3,27 @@
    with_items:
    - {src: add_mysql.exp, dest: /root/add_mysql.exp }
    - {src: change_mysql_user.exp, dest: /root/change_mysql_user.exp }
-   - {src: mysql-community-server-5.7.27-1.el7.x86_64.rpm, dest: /root/mysql-community-server-5.7.27-1.el7.x86_64.rpm }
+   - {src: mysql57-community-release-el7-11.noarch.rpm, dest: /root/mysql57-community-release-el7-11.noarch.rpm }
 
  - name: mysql.repo
-   yum: name=/root/mysql57-community-release-el7-8.noarch.rpm state=present
+   yum: name=/root/mysql57-community-release-el7-11.noarch.rpm state=present
+
+ - name: show mysql-server rpm
+   shell: ls /root/mysql-community-server-5.7.27-1.el7.x86_64.rpm
+   ignore_errors: True
+   register: rpmisin 
+
+
+ - name: wget mysql-server rpm
+   shell: wget http://mirrors.sohu.com/mysql/MySQL-5.7/mysql-community-server-5.7.27-1.el7.x86_64.rpm
+   when: rpmisin|failed
 
  - name: Install expect and mysql-server
    yum: name={{ item }} state=latest
    with_items:
    - expect
-   - mysql-community-server
+   - /root/mysql-community-server-5.7.27-1.el7.x86_64.rpm
+   - MySQL-python
 
  - name: chmod -R 777 /var/lib/mysql
    shell: chmod -R 777 /var/lib/mysql

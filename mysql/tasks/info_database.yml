@@ -1,0 +1,21 @@
+---
+ - name: create a database
+   mysql_db:
+     login_host: "127.0.0.1"
+     login_user: "root"
+     login_password: "{{mysql_passwd}}"
+     login_port: "3306"
+     name: "{{database}}"
+     encoding: "utf8"
+     state: "present"
+ - name: create a user
+   mysql_user:
+    login_host: "127.0.0.1"
+    login_user: "root"
+    login_password: "{{ mysql_passwd }}"
+    login_port: "3306"
+    name: "{{ user }}"
+    password: "{{ password }}"
+    host: "%"
+    priv: "*.*:all"
+    state: "present"

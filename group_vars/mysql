@@ -1,5 +1,6 @@
 ---
 mysql_port: 3306
 user: ansible
-password: ansible
+password: Shuang@123
 database: ansible
+mysql_passwd: Shuang@123
